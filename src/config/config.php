@@ -4,8 +4,8 @@ return array(
 
     'settings' => array(
         'default_menu_name' => 'topMenu',
-        'default_layout_template' => 'menu::default.layout',
-        'default_item_template' => 'menu::default.item'
+        'layout_template' => 'menu::default.layout',
+        'item_template' => 'menu::default.item'
     ),
 
     'menus' => array(

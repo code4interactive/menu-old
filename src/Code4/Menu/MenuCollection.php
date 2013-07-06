@@ -28,10 +28,13 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     protected $itemToAdd;
 
-    public function __construct($container, Repository $configRepository, $settings = array()) {
+    protected $lvl;
+
+    public function __construct($container, Repository $configRepository, $settings = array(), $lvl) {
 
         $this->container = $container;
         $this->configRepository = $configRepository;
+        $this->lvl = $lvl;
 
         $settings['layout_template'] = isset($settings['layout_template']) ? $settings['layout_template'] : $this->configRepository->get("menu::settings.default_layout_template");
         $settings['item_template'] = isset($settings['item_template']) ? $settings['item_template'] : $this->configRepository->get("menu::settings.default_item_template");
@@ -63,7 +66,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
         } else if (is_callable($item)) {
 
-            $menuItem = new MenuItem(null, null, null, null, null, null, null, $this->configRepository, $this->settings['item_template']);
+            $menuItem = new MenuItem(null, null, null, null, null, null, null, $this->configRepository, $this->settings, $this->lvl);
 
             $this->itemToAdd = $item($menuItem);
         }
@@ -98,11 +101,11 @@ class MenuCollection extends Collection implements RenderableInterface {
         $class = isset($item['class'])?$item['class']:null;
         $childrenClass = isset($item['childrenClass'])?$item['childrenClass']:null;
 
-        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $this->configRepository, $this->settings['item_template']);
+        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $this->configRepository, $this->settings, $this->lvl);
 
         if (isset($item['children']) && is_array($item['children']))
         {
-            $childCollection = new MenuCollection($item['id'], $this->configRepository, $this->settings);
+            $childCollection = new MenuCollection($item['id'], $this->configRepository, $this->settings, $this->lvl+1);
             $childCollection->loadSettings($this->settings);
 
             foreach ($item['children'] as $index => $child)
@@ -119,6 +122,14 @@ class MenuCollection extends Collection implements RenderableInterface {
         return $menuItem;
     }
 
+    /**
+     * Stores last added item at given offset, or returns item from given offset
+     * If no offset given - stores last item at first empty location
+     *
+     * @param null|int|string $index
+     * @param bool $overwrite
+     * @return $this|mixed|null|MenuItem
+     */
     public function at($index = null, $overwrite = false)
     {
         if (is_null($index)) {
@@ -154,6 +165,7 @@ class MenuCollection extends Collection implements RenderableInterface {
                 return $this;
             }
 
+            //Nie istnieje wiec zwracamy
             if (!$this->offsetExists($index)) return null;
 
             return $this->offsetGet($index);

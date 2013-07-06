@@ -29,11 +29,13 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     protected $children = null;
 
-    protected $template = null;
+    protected $settings = null;
 
     protected $configRepository = null;
 
-    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $configRepository = null, $template = null)
+    protected $lvl = null;
+
+    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $configRepository = null, $settings = null, $lvl = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -43,7 +45,8 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         $this->class = $class;
         $this->childrenClass = $childrenClass;
         $this->configRepository = $configRepository;
-        $this->template = $template ? $template : $this->configRepository->get('menu::settings.default_item_template');
+        $this->lvl = $lvl;
+        $this->settings = $settings ? $settings : $this->configRepository->get('menu::settings');
 
     }
 
@@ -61,7 +64,7 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     {
 
         if (!($this->children instanceof MenuCollection)) {
-            $this->children = new MenuCollection($this->id, $this->configRepository);
+            $this->children = new MenuCollection($this->id, $this->configRepository, $this->settings, $this->lvl+1);
         }
 
         return $this->children;
@@ -168,6 +171,11 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         $this->template = $template;
     }
 
+    public function getLvl()
+    {
+        return $this->lvl;
+    }
+
     public function add($item)
     {
         return $this->getChildren()->add($item);
@@ -192,7 +200,7 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
      */
     public function render()
     {
-        $view = \View::make($this->template);
+        $view = \View::make($this->settings['item_template']);
 
         $view->menuItem = array($this);
 

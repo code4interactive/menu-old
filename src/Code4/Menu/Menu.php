@@ -31,7 +31,7 @@ class Menu {
 
         if (!isset($this->containers[$container]))
         {
-            $this->containers[$container] = new MenuCollection($container, $this->configRepository, $settings);
+            $this->containers[$container] = new MenuCollection($container, $this->configRepository, $settings, 0);
         }
 
         return $this->containers[$container];

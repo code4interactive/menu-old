@@ -224,7 +224,7 @@ Menu::topMenu()->at('main')->getChildren()->add($item)->at(0);
 Menu::topMenu()->at(1)->getChildren()->at(0)->setUrl('http://www.code4.pl/');
 Menu::topMenu()->at(1)->getChildren()->at('userManagment')->setUrl('http://www.code4.pl/');
 
-//Wyszukiwanie po Id. Rekurencyjne więc
+//Wyszukiwanie po Id. Rekurencyjne więc dotyczy także submenu
 Menu::find('main')->setName('Test');
 Menu::topMenu()->find('main')->setName('Test');
 Menu::topMenu()->find('main')->getChildren()->find('submenuItem')->setName('Submenu Item');
@@ -248,14 +248,7 @@ Menu::topMenu()->loadSettings(
 )
 
 
-//Aby zadziałało należy nadac wszystkim ...
-Menu::topMenu()->loadSettings(
-    array(
-        'layout_template' => 'menu::topMenu.layout',
-        'item_template' => 'menu::topMenu.item'
-    )
-)
-
+//Aby zadziałało dla itemów należy nadac wszystkim ...
 foreach (Menu::topMenu()->all() as $index => $item) {
 
     Menu::topMenu()->at($index)->setTemplate("menu::topMenu.item");
