@@ -27,7 +27,7 @@ lub zwykły array następującej struktury:
 
 ```php
 
-array(
+$config = array(
 
     'menus' => array(
 
@@ -77,6 +77,8 @@ array(
     )
 )
 
+Menu::loadMenuFromConfig($config);
+
 ```
 
 Pole settings jest opcjonalne.
@@ -124,6 +126,15 @@ $position = 10;
 
 Menu::topMenu()->add($item)->at($position);
 ```
+
+W przypadku dodawania pozycji z metodą at() można przekazać do niej drugi parametr który decyduje o ty czy dodawana pozycja ma nadpisać istniejącą jeśli mają ten sam index
+
+```php
+
+Menu::topMenu()->add($item)->at($position, true);
+
+```
+
 
 Dodawanie wielu pozycji z własnego configu lub tablicy odbywa się analogicznie z pominięciem at().
 

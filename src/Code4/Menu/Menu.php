@@ -38,9 +38,14 @@ class Menu {
     }
 
 
-    public function loadMenuFromConfig(Repository $configRepository) {
+    public function loadMenuFromConfig($config) {
 
-        $menus = $configRepository->get('menu::menus');
+        if ($config instanceof Repository) {
+            $menus = $config->get('menu::menus');
+        }
+        else {
+            $menus = $config;
+        }
 
         foreach ($menus as $containerName => $container) {
 

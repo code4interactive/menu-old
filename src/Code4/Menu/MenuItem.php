@@ -35,6 +35,8 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     protected $lvl = null;
 
+    protected $active = false;
+
     function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $configRepository = null, $settings = null, $lvl = null)
     {
         $this->id = $id;
@@ -174,6 +176,16 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     public function getLvl()
     {
         return $this->lvl;
+    }
+
+    public function setActive($active)
+    {
+        $this->active = $active;
+    }
+
+    public function getActive()
+    {
+        return $this->active;
     }
 
     public function add($item)
