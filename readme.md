@@ -12,6 +12,16 @@ Menu::wlasnyKontener()->add($items);
 
 ```
 
+Jeśli chcemy skorzystać z własnego szablonu należy przekazać podczas pierwszego tworzenia kontenera ustawienia:
+
+```php
+$settings = array(
+    'layout_template' => 'menu::topMenu.layout',
+    'item_template' => 'menu::topMenu.item'
+)
+Menu::wlasnyKontener($settings)->add($items);
+```
+
 Możliwe jest także załadowanie kilku kontenerów z konfiguracji. Aby to wykonać należy przekazać obiekt typu Illuminate\Config\Repository
 lub zwykły array następującej struktury:
 
@@ -23,7 +33,8 @@ array(
 
         'nazwaKontenera' => array(
             'settings' => array(
-
+                'layout_template' => 'menu::topMenu.layout',
+                'item_template' => 'menu::topMenu.item'
             ),
             'items' => array(
                 0 => array(
@@ -67,6 +78,8 @@ array(
 )
 
 ```
+
+Pole settings jest opcjonalne.
 
 
 Params:
@@ -192,5 +205,61 @@ Menu::topMenu()->add(function($menuItem){
     ))->at(1);
 
 })->at($position);
+
+```
+
+Operowanie na istniejących pozycjach
+_______________
+
+```php
+//Zmiana pojedynczych pozycji menu
+Menu::topMenu()->at(1)->setName('Test');
+Menu::topMenu()->at('main')->setName('Test');
+
+//Dodawanie submenu do istniejącej pozycji
+Menu::topMenu()->at(1)->getChildren()->add($item)->at(0);
+Menu::topMenu()->at('main')->getChildren()->add($item)->at(0);
+
+//Zmiana danych a pozycjach submenu
+Menu::topMenu()->at(1)->getChildren()->at(0)->setUrl('http://www.code4.pl/');
+Menu::topMenu()->at(1)->getChildren()->at('userManagment')->setUrl('http://www.code4.pl/');
+
+//Wyszukiwanie po Id. Rekurencyjne więc
+Menu::find('main')->setName('Test');
+Menu::topMenu()->find('main')->setName('Test');
+Menu::topMenu()->find('main')->getChildren()->find('submenuItem')->setName('Submenu Item');
+
+```
+
+Operacje na kolekcjach
+_______________
+
+```php
+
+//Zmiana ustawien kolekcji
+//UWAGA - nie działa jeszcze dziedziczenie ustawień więc nadanie innych widoków zadziała tylko dla elementu któremy ten widok ustawimy.
+//W tym przypadku tylko dla kolekcji topMenu (mimo ustawienia itemu)
+
+Menu::topMenu()->loadSettings(
+    array(
+        'layout_template' => 'menu::topMenu.layout',
+        'item_template' => 'menu::topMenu.item'
+    )
+)
+
+
+//Aby zadziałało należy nadac wszystkim ...
+Menu::topMenu()->loadSettings(
+    array(
+        'layout_template' => 'menu::topMenu.layout',
+        'item_template' => 'menu::topMenu.item'
+    )
+)
+
+foreach (Menu::topMenu()->all() as $index => $item) {
+
+    Menu::topMenu()->at($index)->setTemplate("menu::topMenu.item");
+
+}
 
 ```

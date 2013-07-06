@@ -18,6 +18,8 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     protected $configRepository;
 
+    protected $settings;
+
     protected $lastIndex;
 
     protected $lastItem;
@@ -26,10 +28,24 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     protected $itemToAdd;
 
-    public function __construct($container, Repository $configRepository) {
+    public function __construct($container, Repository $configRepository, $settings = array()) {
 
         $this->container = $container;
         $this->configRepository = $configRepository;
+
+        $settings['layout_template'] = isset($settings['layout_template']) ? $settings['layout_template'] : $this->configRepository->get("menu::settings.default_layout_template");
+        $settings['item_template'] = isset($settings['item_template']) ? $settings['item_template'] : $this->configRepository->get("menu::settings.default_item_template");
+
+        $this->settings = $settings;
+
+    }
+
+    public function loadSettings($settings = array()) {
+
+        $settings['layout_template'] = isset($settings['layout_template']) ? $settings['layout_template'] : $this->configRepository->get("menu::settings.default_layout_template");
+        $settings['item_template'] = isset($settings['item_template']) ? $settings['item_template'] : $this->configRepository->get("menu::settings.default_item_template");
+
+        $this->settings = $settings;
 
     }
 
@@ -47,7 +63,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
         } else if (is_callable($item)) {
 
-            $menuItem = new MenuItem(null, null, null, null, null, null, null, $this->configRepository);
+            $menuItem = new MenuItem(null, null, null, null, null, null, null, $this->configRepository, $this->settings['item_template']);
 
             $this->itemToAdd = $item($menuItem);
         }
@@ -69,11 +85,9 @@ class MenuCollection extends Collection implements RenderableInterface {
                 $this->add($item)->at($index);
 
             }
-
         }
 
         return $this;
-
     }
 
     private function addArray($item) {
@@ -84,12 +98,12 @@ class MenuCollection extends Collection implements RenderableInterface {
         $class = isset($item['class'])?$item['class']:null;
         $childrenClass = isset($item['childrenClass'])?$item['childrenClass']:null;
 
-        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $this->configRepository);
+        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $this->configRepository, $this->settings['item_template']);
 
         if (isset($item['children']) && is_array($item['children']))
         {
-
-            $childCollection = new MenuCollection($item['id'], $this->configRepository);
+            $childCollection = new MenuCollection($item['id'], $this->configRepository, $this->settings);
+            $childCollection->loadSettings($this->settings);
 
             foreach ($item['children'] as $index => $child)
             {
@@ -212,15 +226,38 @@ class MenuCollection extends Collection implements RenderableInterface {
         return $this;
     }
 
+    /**
+     * Recurrent search of element by Id
+     * @param $id
+     * @return null | \Code4\Menu\
+     */
+    public function find($id) {
+
+        foreach ($this->all() as $item) {
+
+            $found = null;
+
+            if ($item->getId == $id) $found = $item;
+
+            else $found = $item->find($id);
+
+            if ($found) return $found;
+
+        }
+        return null;
+
+    }
+
 
     public function render() {
 
-       $view = \View::make('menu::default.layout')->with("menuCollection", array($this));
+       $view = \View::make($this->settings['layout_template'])->with("menuCollection", array($this));
        return $view;
 
     }
 
     public function __toString() {
+
         return (string) $this->render();
     }
 

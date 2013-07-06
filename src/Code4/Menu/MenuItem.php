@@ -1,6 +1,7 @@
 <?php
 namespace Code4\Menu;
 
+use Illuminate\Config\Repository;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Contracts\JsonableInterface;
 use Illuminate\Support\Contracts\ArrayableInterface;
@@ -28,11 +29,11 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     protected $children = null;
 
-    protected $format = null;
+    protected $template = null;
 
     protected $configRepository = null;
 
-    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $children = null, $configRepository = null)
+    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $configRepository = null, $template = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -41,8 +42,9 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         $this->icon = $icon;
         $this->class = $class;
         $this->childrenClass = $childrenClass;
-        $this->children = $children;
         $this->configRepository = $configRepository;
+        $this->template = $template ? $template : $this->configRepository->get('menu::settings.default_item_template');
+
     }
 
     public function setConfigRepository($configRepository)
@@ -161,6 +163,11 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         return $this->isChild;
     }
 
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+    }
+
     public function add($item)
     {
         return $this->getChildren()->add($item);
@@ -171,14 +178,21 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         return $this->getChildren()->at($index);
     }
 
+    public function find($id)
+    {
+
+        if ($this->hasChildren()) return $this->getChildren()->find($id);
+        return null;
+
+    }
+
     /**
-     * TODO: Finish handling rendering single items. Use item templates in {id} format
+     * TODO: If isset default template check for parent item template. If is diffrent - use it.
      * @return string
      */
     public function render()
     {
-
-        $view = \View::make("menu::default.item");
+        $view = \View::make($this->template);
 
         $view->menuItem = array($this);
 
@@ -214,6 +228,6 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
      */
     public function __toString()
     {
-        return $this->render();
+        return (string) $this->render();
     }
 }

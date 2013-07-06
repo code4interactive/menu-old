@@ -3,15 +3,17 @@
 return array(
 
     'settings' => array(
-        'default_menu' => 'topMenu2',
-        'default_template' => 'default'
+        'default_menu_name' => 'topMenu',
+        'default_layout_template' => 'menu::default.layout',
+        'default_item_template' => 'menu::default.item'
     ),
 
     'menus' => array(
 
         'topMenu' => array(
             'settings' => array(
-
+                'layout_template' => 'menu::topMenu.layout',
+                'item_template' => 'menu::topMenu.item'
             ),
             'items' => array(
                 0 => array(
@@ -47,6 +49,13 @@ return array(
                     )
                 )
             )
+        ),
+        'leftMenu' => array(
+            'settings' => array(
+                'layout_template' => 'menu::leftMenu.layout',
+                'item_template' => 'menu::leftMenu.item'
+            ),
+            'items' => array()
         )
     ),
 

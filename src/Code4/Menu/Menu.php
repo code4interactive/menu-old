@@ -4,6 +4,7 @@
  * User: Artur Bartczak
  * Date: 05.07.13
  * Time: 13:53
+ *
  */
 
 namespace Code4\Menu;
@@ -17,19 +18,20 @@ class Menu {
     protected $containers;
 
     public function __construct(Repository $configRepository) {
+
         $this->configRepository = $configRepository;
 
         $this->loadMenuFromConfig($this->configRepository);
     }
 
 
-    public function container($container = null) {
+    public function container($container = null, $settings = null) {
 
-        $container = is_null($container) ? $this->configRepository->get('menu::settings.default_menu'):$container;
+        $container = is_null($container) ? $this->configRepository->get('menu::settings.default_menu_name'):$container;
 
         if (!isset($this->containers[$container]))
         {
-            $this->containers[$container] = new MenuCollection($container, $this->configRepository);
+            $this->containers[$container] = new MenuCollection($container, $this->configRepository, $settings);
         }
 
         return $this->containers[$container];
@@ -38,44 +40,46 @@ class Menu {
 
     public function loadMenuFromConfig(Repository $configRepository) {
 
-        foreach ($configRepository->get('menu::menus') as $containerName => $container) {
+        $menus = $configRepository->get('menu::menus');
+
+        foreach ($menus as $containerName => $container) {
+
+            if (isset($container['settings'])) {
+
+                $this->container($containerName, $container['settings']);
+
+            }
 
             $this->container($containerName)->add($container['items']);
 
-            /*foreach($container['items'] as $index => $menuItem)
-            {
-                $this->container($containerName)->add($menuItem)->at($index);
-            }*/
-
         }
+    }
+
+    public function find($id) {
+
+
 
     }
 
-    public function getConfigRepository()
-    {
+    /*public function getConfigRepository() {
+
         return $this->configRepository;
-    }
 
-
-
-    public function addToMenu() {
-
-
-
-    }
-
+    }*/
 
     /**
-     * Calls methods on given container. Eg. Menu::topMenu()->add($item);
+     * Call method to make and return container
+     * Eg. Menu::topMenu()->add($item);
      *
      * @param $name
-     * @param $arguments
+     * @param $arguments //settings
      * @return container
      */
     public function __call($name, $arguments) {
-        //return call_user_func_array(array($this->container($name), $name), $arguments);
 
-        return $this->container($name);
+        $arguments = sizeof($arguments)>0?$arguments[0]:null;
+
+        return $this->container($name, $arguments);
 
     }
 }
