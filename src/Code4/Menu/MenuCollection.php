@@ -260,8 +260,16 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     }
 
+    public function isLast(MenuItem $item) {
+
+        //return $this->last()->getId() == $item->getId();
+        return true;
+
+    }
 
     public function render() {
+
+       if ($this->count() == 0) return "Menu is empty";
 
        $view = \View::make($this->settings['layout_template'])->with("menuCollection", array($this));
        return $view;

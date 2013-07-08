@@ -46,7 +46,6 @@ class MenuServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('menu');
 	}
-
 }

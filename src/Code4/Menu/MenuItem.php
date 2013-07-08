@@ -188,6 +188,11 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         return $this->active;
     }
 
+    public function isActive()
+    {
+        return $this->active?true:false;
+    }
+
     public function add($item)
     {
         return $this->getChildren()->add($item);
@@ -207,7 +212,7 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     }
 
     /**
-     * TODO: If isset default template check for parent item template. If is diffrent - use it.
+     * TODO: If isset default template check for parent item template. If is different - use it.
      * @return string
      */
     public function render()
