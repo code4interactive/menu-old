@@ -9,8 +9,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.0.x",
-        "code4/platform": "1.0.*"
+        "illuminate/support": "4.0.x"
     },
     "autoload": {
         "classmap": [
