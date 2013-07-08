@@ -262,8 +262,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     public function isLast(MenuItem $item) {
 
-        //return $this->last()->getId() == $item->getId();
-        return true;
+        return $this->last()->getId() == $item->getId();
 
     }
 

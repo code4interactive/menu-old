@@ -1,5 +1,4 @@
 <?php $menuItem = $menuItem[0]; ?>
-
 @if ($menuItem->getType() == 'subHeader')
 
     <li class="{{$menuItem->getClass()}} nav-header">
@@ -37,6 +36,7 @@
                 @endif
 
                 {{ $menuItem->getName() }}
+
             </span>
         </div>
 
