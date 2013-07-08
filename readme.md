@@ -89,7 +89,7 @@ Params:
 * id: unikalny identyfikator
 * name: wyświetlana nazwa
 * type: typ - dowolny - do zaimplementowania w widokach modułu  - typ wbudowany w domyślny template to: subHeader
-* url: link
+* url: link lub named route - jeżeli podano named route system sam sprawdzi czy istnieje i oznaczy pozycję jako active
 * icon: klasa css ikony np: icon_home. Można używać gotowej klasy wbudowanej w platformę Icons->$icon_home;
 * class: dodatkowe klasy css do stylizacji
 * childrenClass: klasy do stylizacji submenu jeśli występuje
