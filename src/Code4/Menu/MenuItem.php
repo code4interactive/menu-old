@@ -217,6 +217,18 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
      */
     public function render()
     {
+
+        foreach(\Route::getRoutes()->all() as $name => $route){
+            if ($name == $this->url) {
+                $this->url = \Url::route($this->url);
+                $this->active = \Route::currentRouteName() == $name?true:false;
+                break;
+            }
+        }
+
+        //Sprawdzamy routing
+        //$this->setName($this->getName()." ".\Route::currentRouteName());
+
         $view = \View::make($this->settings['item_template']);
 
         $view->menuItem = array($this);
