@@ -218,6 +218,10 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     public function render()
     {
 
+
+        if (!\View::exists($this->settings['item_template'])) return "Menu item template: ".$this->settings['item_template']." don't exist";
+
+
         foreach(\Route::getRoutes()->all() as $name => $route){
             if ($name == $this->url) {
                 $this->url = \Url::route($this->url);

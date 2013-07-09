@@ -268,10 +268,12 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     public function render() {
 
-       if ($this->count() == 0) return "Menu is empty";
+        if (!\View::exists($this->settings['layout_template'])) return "Menu collection template: ".$this->settings['layout_template']." don't exist";
 
-       $view = \View::make($this->settings['layout_template'])->with("menuCollection", array($this));
-       return $view;
+        if ($this->count() == 0) return "Menu collection is empty";
+
+        $view = \View::make($this->settings['layout_template'])->with("menuCollection", array($this));
+        return $view;
 
     }
 
