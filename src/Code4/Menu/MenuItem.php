@@ -37,7 +37,7 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     protected $active = false;
 
-    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $configRepository = null, $settings = null, $lvl = null)
+    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $active = false, $configRepository = null, $settings = null, $lvl = null)
     {
         $this->id = $id;
         $this->name = $name;
@@ -46,6 +46,7 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         $this->icon = $icon;
         $this->class = $class;
         $this->childrenClass = $childrenClass;
+        $this->active = $active;
         $this->configRepository = $configRepository;
         $this->lvl = $lvl;
         $this->settings = $settings ? $settings : $this->configRepository->get('menu::settings');

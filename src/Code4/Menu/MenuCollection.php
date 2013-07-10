@@ -66,7 +66,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
         } else if (is_callable($item)) {
 
-            $menuItem = new MenuItem(null, null, null, null, null, null, null, $this->configRepository, $this->settings, $this->lvl);
+            $menuItem = new MenuItem(null, null, null, null, null, null, null, null, $this->configRepository, $this->settings, $this->lvl);
 
             $this->itemToAdd = $item($menuItem);
         }
@@ -100,8 +100,9 @@ class MenuCollection extends Collection implements RenderableInterface {
         $icon = isset($item['icon'])?$item['icon']:null;
         $class = isset($item['class'])?$item['class']:null;
         $childrenClass = isset($item['childrenClass'])?$item['childrenClass']:null;
+        $active = isset($item['active'])?$item['active']:false;
 
-        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $this->configRepository, $this->settings, $this->lvl);
+        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $active, $this->configRepository, $this->settings, $this->lvl);
 
         if (isset($item['children']) && is_array($item['children']))
         {
