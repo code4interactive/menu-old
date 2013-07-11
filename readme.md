@@ -267,3 +267,14 @@ foreach (Menu::topMenu()->all() as $index => $item) {
 }
 
 ```
+
+
+Ustawianie aktywnej / otwartej pozycji
+______________
+
+Wywołanie setActivePath powoduje przeszukanie rekurencyjne wszystkich pozycji i ich potomków i zaznaczenie wszystkich znalezionych w ścieżce na active / open
+Działa poprawnie tylko jeśli ID wszystkich pozycji są unikalne.
+
+```php
+Menu::leftMenu()->setActivePath('idPozycji');
+```

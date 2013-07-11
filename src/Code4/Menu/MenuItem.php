@@ -37,19 +37,27 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     protected $active = false;
 
-    function __construct($id, $name, $type = null, $url = null, $icon = null, $class = null, $childrenClass = null, $active = false, $configRepository = null, $settings = null, $lvl = null)
+    protected $open = false;
+
+    protected $additional = null;
+
+    function __construct($id, $name, $item = array(), $configRepository = null, $settings = null, $lvl = null)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->type = $type;
-        $this->url = $url;
-        $this->icon = $icon;
-        $this->class = $class;
-        $this->childrenClass = $childrenClass;
-        $this->active = $active;
+
+        $this->type = isset($item['type'])?$item['type']:null;
+        $this->url = isset($item['url'])?$item['url']:null;
+        $this->icon = isset($item['icon'])?$item['icon']:null;
+        $this->class = isset($item['class'])?$item['class']:null;
+        $this->childrenClass = isset($item['childrenClass'])?$item['childrenClass']:null;
+        $this->active = isset($item['active'])?$item['active']:false;
+        $this->open = isset($item['open'])?$item['open']:false;
+        $this->additional = isset($item['additional'])?$item['additional']:false;
+
         $this->configRepository = $configRepository;
-        $this->lvl = $lvl;
         $this->settings = $settings ? $settings : $this->configRepository->get('menu::settings');
+        $this->lvl = $lvl;
 
     }
 
@@ -194,6 +202,26 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         return $this->active?true:false;
     }
 
+    public function getOpen()
+    {
+        return $this->open;
+    }
+
+    public function setOpen($open)
+    {
+        $this->open = $open;
+    }
+
+    public function setAdditional($additional)
+    {
+        $this->additional = $additional;
+    }
+
+    public function getAdditional()
+    {
+        return $this->additional;
+    }
+
     public function add($item)
     {
         return $this->getChildren()->add($item);
@@ -206,10 +234,19 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     public function find($id)
     {
-
         if ($this->hasChildren()) return $this->getChildren()->find($id);
         return null;
+    }
 
+    public function setActivePath($id)
+    {
+        if ($this->id == $id) {
+            $this->setOpen(true);
+            $this->setActive(true);
+            return $this;
+        }
+        elseif ($this->hasChildren()) return $this->getChildren()->setActivePath($id);
+        return null;
     }
 
     /**
@@ -219,14 +256,13 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     public function render()
     {
 
-
         if (!\View::exists($this->settings['item_template'])) return "Menu item template: ".$this->settings['item_template']." don't exist";
 
 
         foreach(\Route::getRoutes()->all() as $name => $route){
             if ($name == $this->url) {
                 $this->url = \Url::route($this->url);
-                $this->active = \Route::currentRouteName() == $name?true:false;
+                $this->active = \Route::currentRouteName() == $name && !$this->active ? true : false;
                 break;
             }
         }

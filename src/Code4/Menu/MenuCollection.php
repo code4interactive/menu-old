@@ -66,7 +66,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
         } else if (is_callable($item)) {
 
-            $menuItem = new MenuItem(null, null, null, null, null, null, null, null, $this->configRepository, $this->settings, $this->lvl);
+            $menuItem = new MenuItem(null, null, array(), $this->configRepository, $this->settings, $this->lvl);
 
             $this->itemToAdd = $item($menuItem);
         }
@@ -95,14 +95,7 @@ class MenuCollection extends Collection implements RenderableInterface {
 
     private function addArray($item) {
 
-        $type = isset($item['type'])?$item['type']:null;
-        $url = isset($item['url'])?$item['url']:null;
-        $icon = isset($item['icon'])?$item['icon']:null;
-        $class = isset($item['class'])?$item['class']:null;
-        $childrenClass = isset($item['childrenClass'])?$item['childrenClass']:null;
-        $active = isset($item['active'])?$item['active']:false;
-
-        $menuItem = new MenuItem($item['id'], $item['name'], $type, $url, $icon, $class, $childrenClass, $active, $this->configRepository, $this->settings, $this->lvl);
+        $menuItem = new MenuItem($item['id'], $item['name'], $item, $this->configRepository, $this->settings, $this->lvl);
 
         if (isset($item['children']) && is_array($item['children']))
         {
@@ -259,6 +252,23 @@ class MenuCollection extends Collection implements RenderableInterface {
         }
         return null;
 
+    }
+
+    public function setActivePath($id) {
+
+        foreach ($this->all() as $item) {
+
+            $found = $item->setActivePath($id);
+
+            if ($found) {
+
+                $item->setOpen(true);
+                return $item;
+
+            }
+
+        }
+        return null;
     }
 
     public function isLast(MenuItem $item) {
