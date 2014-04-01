@@ -271,6 +271,22 @@ class MenuCollection extends Collection implements RenderableInterface {
         return null;
     }
 
+    /**
+     * Sprawdzamy bierzącą lub zadaną ścieżkę i zaznaczamy odpowiednie pozycje menu
+     * @param  string $path Ścieżka 
+     * @return null
+     */
+    public function checkRoutesForCurrent($path = null) {
+
+        if (is_null($path))
+            $path = \Route::getCurrentRoute()->getPath();
+
+        foreach ($this->all() as $item) {
+            if ($item->checkPath($path)) break;
+        }
+
+    }
+
     public function isLast(MenuItem $item) {
 
         return $this->last()->getId() == $item->getId();
@@ -282,6 +298,8 @@ class MenuCollection extends Collection implements RenderableInterface {
         if (!\View::exists($this->settings['layout_template'])) return "Menu collection template: ".$this->settings['layout_template']." don't exist";
 
         if ($this->count() == 0) return "Menu collection is empty";
+
+        $this->checkRoutesForCurrent();
 
         $view = \View::make($this->settings['layout_template'])->with("menuCollection", array($this));
         return $view;

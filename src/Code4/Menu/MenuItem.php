@@ -81,6 +81,34 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
         return $this->children;
     }
 
+    /**
+     * Sprawdzamy ścieżkę i zaznaczamy odpowiednie elementy jeżeli ścieżka się zgadza
+     * @param  string $path Ścieżka do sprawdzenia
+     * @return bool
+     */
+    public function checkPath($path) {
+
+        if (trim($this->url, "/") == $path) {
+            $this->setActive(true);
+            $this->setOpen(true);
+            return true;
+        } else {
+            if ($this->hasChildren()) {
+                
+                foreach($this->getChildren()->all() as $item) {
+
+                    if ($item->checkPath($path)) {
+                        $this->setOpen(true);
+                        return true;
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
     public function setChildrenClass($childrenClass)
     {
         $this->childrenClass = $childrenClass;
@@ -98,7 +126,11 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
 
     public function getClass()
     {
-        return $this->class;
+        $temp = $this->class;
+        if ($this->open) $temp .= " open";
+        if ($this->active) $temp .= " active";
+
+        return $temp;
     }
 
     public function setFormat($format)
@@ -257,24 +289,6 @@ class MenuItem implements JsonableInterface, ArrayableInterface, RenderableInter
     {
 
         if (!\View::exists($this->settings['item_template'])) return "Menu item template: ".$this->settings['item_template']." don't exist";
-
-
-        /*foreach(\Route::getRoutes()->all() as $name => $route){
-            if ($name == $this->url) {
-                $this->url = \Url::route($this->url);
-                $this->active = \Route::currentRouteName() == $name && !$this->active ? true : false;
-                break;
-            }
-        }*/
-
-
-        foreach(\Route::getRoutes() as $route) {
-            
-        }
-
-
-        //Sprawdzamy routing
-        //$this->setName($this->getName()." ".\Route::currentRouteName());
 
         $view = \View::make($this->settings['item_template']);
 
