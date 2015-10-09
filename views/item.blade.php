@@ -1,0 +1,1 @@
+<a href="{{ $item->getUrl() }}">{!! $item->renderIcon() !!}<span class="nav-label">{!! $item->getTitle() !!}</span> @if($item->hasChildren())<span class="fa arrow"></span>@endif</a>
