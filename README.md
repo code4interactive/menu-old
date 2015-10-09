@@ -1,30 +1,26 @@
 # :package_name
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
+[![Software License][ico-license]](LICENSE)
 [![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-**Note:** Replace ```:author_name``` ```:author_username``` ```:author_website``` ```:author_email``` ```:package_name``` ```:package_description``` with their correct values in [README.md](README.md), [CHANGELOG.md](CHANGELOG.md), [LICENSE.md](LICENSE.md) and [composer.json](composer.json) files, then delete this line.
-
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
 
 ## Install
 
 Via Composer
 
 ``` bash
-composer require lykegenes/:package_name
+composer require code4interactive/menu
 ```
 
 ## Usage
 
 ``` php
-$skeleton = new Lykegenes\Skeleton();
-echo $skeleton->echoPhrase('Hello, Lykegenes!');
+
+Menu::init();
+Menu::get('menu-name')->render();
+
 ```
 
 ## Testing
@@ -42,17 +38,14 @@ composer test
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/lykegenes/:package_name.svg?style=flat-square
-[ico-license]: https://img.shields.io/packagist/l/lykegenes/:package_name.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/Lykegenes/:package_name/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/lykegenes/:package_name.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/lykegenes/:package_name.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/lykegenes/:package_name.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/code4interactive/menu.svg?style=flat-square
+[ico-license]: https://img.shields.io/packagist/l/code4interactive/menu.svg?style=flat-square
+[ico-license]: https://img.shields.io/github/license/code4interactive/menu.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/code4interactive/menu/master.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/code4interactive/menu.svg?style=flat-square
+[link-packagist]: https://packagist.org/packages/code4interactive/menu
 
-[link-packagist]: https://packagist.org/packages/lykegenes/:package_name
-[link-travis]: https://travis-ci.org/lykegenes/:package_name
-[link-scrutinizer]: https://scrutinizer-ci.com/g/lykegenes/:package_name/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/lykegenes/:package_name
-[link-downloads]: https://packagist.org/packages/lykegenes/:package_name
-[link-author]: https://github.com/:author_username
+[link-travis]: https://travis-ci.org/code4interactive/menu
+[link-downloads]: https://packagist.org/packages/code4interactive/menu
+[link-author]: https://github.com/code4interactive
 [link-contributors]: ../../contributors
